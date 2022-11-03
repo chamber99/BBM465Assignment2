@@ -1,4 +1,8 @@
 
+import model.Message;
+import model.User;
+import views.AccessView;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +18,30 @@ public class MessageBox {
         final int[] count = {0};
 
         frame = new JFrame();
+
+        User a = new User();
+        a.setUsername("A");
+
+        User b1 = new User();
+        b1.setUsername("B");
+
+        JLabel label = new JLabel("Welcome to MessageBox");
+        label.setBounds(130,0,100,40);
+
+        JComboBox<User> userBox = new JComboBox<>();
+        userBox.setBounds(130,50,100,40);
+        userBox.addItem(a);
+        userBox.addItem(b1);
+
+        frame.add(userBox);
+
+        AccessView accessView = new AccessView();
+
+        frame.add(accessView);
+
+        frame.add(label);
+
+
 
 
         JButton b = new JButton("Click 3 times to exit.");//creating instance of JButton

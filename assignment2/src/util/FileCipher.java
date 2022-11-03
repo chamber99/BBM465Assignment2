@@ -1,3 +1,5 @@
+package util;
+
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
@@ -31,7 +33,7 @@ public class FileCipher {
         String mode = commands[6];
         String keyFile = commands[7];
         int algoInput;
-        // Creating a FileOps object to perform all file operations.
+        // Creating a util.FileOps object to perform all file operations.
         FileOps fileOps = new FileOps(inputFile,outputFile,keyFile,mode,algorithm,operation);
         // Reading the bytes of the input file.
         byte[] input = fileOps.readInputFile();

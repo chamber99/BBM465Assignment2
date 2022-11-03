@@ -1,3 +1,7 @@
+package model;
+
+import model.User;
+
 public class Message {
     private String id;
     private User target;
