@@ -32,4 +32,9 @@ public class User {
     public void setID(int ID) {
         this.ID = ID;
     }
+
+    @Override
+    public String toString() {
+        return this.username;
+    }
 }

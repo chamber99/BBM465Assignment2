@@ -20,16 +20,16 @@ public class MessageBox {
         frame = new JFrame();
 
         User a = new User();
-        a.setUsername("A");
+        a.setUsername("Ahmet");
 
         User b1 = new User();
-        b1.setUsername("B");
+        b1.setUsername("Mehmet");
 
         JLabel label = new JLabel("Welcome to MessageBox");
-        label.setBounds(130,0,100,40);
+        label.setBounds(130, 0, 100, 40);
 
         JComboBox<User> userBox = new JComboBox<>();
-        userBox.setBounds(130,50,100,40);
+        userBox.setBounds(130, 50, 100, 40);
         userBox.addItem(a);
         userBox.addItem(b1);
 
@@ -42,14 +42,12 @@ public class MessageBox {
         frame.add(label);
 
 
-
-
         JButton b = new JButton("Click 3 times to exit.");//creating instance of JButton
-        b.setBounds(130,100,100, 40);//x axis, y axis, width, height
+        b.setBounds(130, 100, 100, 40);//x axis, y axis, width, height
 
         frame.add(b);//adding button in JFrame
 
-        frame.setSize(400,500);//400 width and 500 height
+        frame.setSize(400, 500);//400 width and 500 height
         frame.setLayout(null);//using no layout managers
         frame.setVisible(true);//making the frame visible
 
@@ -58,7 +56,8 @@ public class MessageBox {
             public void actionPerformed(ActionEvent e) {
                 count[0]++;
                 // Exits the program if clicked 3 times
-                if(count[0] == 3){
+                if (count[0] == 3) {
+                    System.out.println(userBox.getSelectedItem().toString());
                     System.exit(0);
                 }
 
@@ -66,14 +65,7 @@ public class MessageBox {
         });
 
 
-
-
-
     }
-
-
-
-
 
 
 }
