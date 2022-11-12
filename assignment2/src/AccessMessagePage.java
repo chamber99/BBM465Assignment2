@@ -115,8 +115,10 @@ public class AccessMessagePage implements ActionListener {
         togglePasswordVisibility.addChangeListener(changeEvent -> {
             if (togglePasswordVisibility.isSelected()) {
                 userPassword.setEchoChar((char) 0);
+                messagePassword.setEchoChar((char) 0);
             } else {
                 userPassword.setEchoChar('\u25CF');
+                messagePassword.setEchoChar('\u25CF');
             }
         });
 
