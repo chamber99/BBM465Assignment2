@@ -22,7 +22,13 @@ public class Main {
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         }
-        RegisterFormPage rg = new RegisterFormPage(controller);
+        //RegisterFormPage rg = new RegisterFormPage(controller);
+        //AccessMessagePage ac = new AccessMessagePage(controller);
+        Message ms = new Message();
+        ms.setContent("abiiiiii");
+        ViewMessagePage vm = new ViewMessagePage(controller,ms);
+
+
 
     }
 }

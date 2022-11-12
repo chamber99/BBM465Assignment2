@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 
@@ -34,6 +36,22 @@ public class RegisterFormPage implements ActionListener
         this.mainFrame.setLayout(null);
         this.mainFrame.setBounds(300,90,600,600);
         this.container = this.mainFrame.getContentPane();
+        this.mainFrame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent windowEvent){
+                try {
+                    controller.done();
+                } catch (IllegalBlockSizeException e) {
+                    e.printStackTrace();
+                } catch (BadPaddingException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InvalidKeyException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         this.targetUsername = new JLabel("Auth.username*");
         this.targetUsername.setFont(new Font("Arial", Font.PLAIN, 14));
         this.targetUsername.setSize(150, 20);

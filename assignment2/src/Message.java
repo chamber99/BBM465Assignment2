@@ -36,4 +36,9 @@ public class Message
     public void setReceiver(User receiver) {
         this.receiver = receiver;
     }
+
+    @Override
+    public String toString() {
+        return this.message_id+" "+this.content+" "+this.password+" "+this.receiver.getUsername();
+    }
 }

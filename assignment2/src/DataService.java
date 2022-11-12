@@ -1,9 +1,6 @@
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -12,15 +9,23 @@ import java.util.*;
 public class DataService
 {
     public SecurityProvider securityProvider;
-    FileInputStream inputMessage = new FileInputStream("message.data");
+    public String allSent = "";
 
     public DataService() throws FileNotFoundException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         securityProvider = new SecurityProvider();
     }
 
-    public boolean sendMessage(Message newMessage) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, IOException {
-        FileOutputStream messageWriter  = new FileOutputStream("message.data",true);
-        String messageData = newMessage.getMessage_id() + " "+ newMessage.getContent() + " "+ newMessage.getPassword()+" "+newMessage.getReceiver().getUsername()+"\n";
+    public boolean storeMessages(ArrayList<Message> allMessages) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, IOException {
+        FileOutputStream messageWriter  = new FileOutputStream("message.data");
+        String messageData = "";
+        for(int i=0;i<allMessages.size();i++){
+            if(i == allMessages.size()-1){
+                messageData+= allMessages.get(i).toString();
+            }
+            else{
+                messageData+= allMessages.get(i).toString()+"#msgend#";
+            }
+        }
         byte[] byteArray = messageData.getBytes(StandardCharsets.UTF_8);
         byte[] encrypted = securityProvider.CBCEncryption(byteArray);
         messageWriter.write(encrypted);
@@ -28,44 +33,51 @@ public class DataService
         return true;
     }
     public void readMessages() throws IOException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        FileInputStream inputMessage = new FileInputStream("message.data");
         byte[] inputArray = new byte[inputMessage.available()];
         inputMessage.read(inputArray);
         byte[] decryptedData = securityProvider.CBCDecryption(inputArray);
-        String users = new String(decryptedData);
-        System.out.println(users);
+        System.out.println(new String(decryptedData));
+
     }
-    public void fetchAllMessages() throws IOException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        byte[] inputArray = new byte[inputMessage.available()];
-        inputMessage.read(inputArray);
-        byte[] decryptedData = securityProvider.CBCDecryption(inputArray);
-        String allMessages = new String(decryptedData);
-        String[] split = allMessages.split("\n");
-        for(String line : split){
-            String[] messageComponents = line.split("\\s+");
-            int length = messageComponents.length;
-            String messageID = messageComponents[0];
+    public ArrayList<Message> fetchAllMessages() throws IOException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        ArrayList<Message> allMessages = new ArrayList<>();
+        FileInputStream inputMessage = new FileInputStream("message.data");
+        int bytes = inputMessage.available();
+        if(bytes > 2){
+            byte[] inputArray = new byte[inputMessage.available()];
+            inputMessage.read(inputArray);
+            byte[] decryptedData = securityProvider.CBCDecryption(inputArray);
+            String messages = new String(decryptedData);
+            String[] split = messages.split("#msgend#");
+            for(String line : split){
+                String[] messageComponents = line.split("\\s+");
+                int length = messageComponents.length;
+                String messageID = messageComponents[0];
+                String content = "";
+                for(int i=1;i<length-2;i++){
+                    if(i == length-3){
+                        content+= messageComponents[i];
+                    }
 
-            String content = "";
-            for(int i=1;i<length-2;i++){
-                if(i == length-3){
-                    content+= messageComponents[i];
+                    else{
+                        content+= messageComponents[i]+" ";
+                    }
                 }
-
-                else{
-                    content+= messageComponents[i]+" ";
-                }
+                String password = messageComponents[length-2];
+                String receiverUsername = messageComponents[length-1];
+                Message message = new Message();
+                User receiver = new User();
+                receiver.setUsername(receiverUsername);
+                message.setMessage_id(messageID);
+                message.setContent(content);
+                message.setPassword(password);
+                message.setReceiver(receiver);
+                allMessages.add(message);
             }
-            String password = messageComponents[length-2];
-            String receiverUsername = messageComponents[length-1];
-            System.out.println(messageID);
-            System.out.println(content);
-            System.out.println(password);
-            System.out.println(receiverUsername);
-            System.out.println("----------------------------------");
-
         }
 
-
+        return allMessages;
     }
 
     public void storeUsers(ArrayList<User> allUsers) throws IllegalBlockSizeException, BadPaddingException, IOException, InvalidKeyException {
@@ -135,14 +147,20 @@ public class DataService
         }
        return  allUsers;
     }
-    public void fetchSalt() throws IOException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public HashMap<String,String> fetchAllSalts() throws IOException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        HashMap<String,String> allSalts = new HashMap<>();
         FileInputStream inputStream = new FileInputStream("salt.data");
-        System.out.println(inputStream.available());
         byte[] inputArray = new byte[inputStream.available()];
         inputStream.read(inputArray);
         byte[] decryptedData = securityProvider.CBCDecryption(inputArray);
-        String users = new String(decryptedData);
-        System.out.println(users);
-
+        String salts = new String(decryptedData);
+        String[] split = salts.split("\n");
+        for(String s : split){
+            String[] saltData = s.split("\\s+");
+            String username = saltData[0];
+            String salt = saltData[1];
+            allSalts.put(username,salt);
+        }
+        return allSalts;
     }
 }
