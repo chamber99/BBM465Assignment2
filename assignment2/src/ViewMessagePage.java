@@ -3,8 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ViewMessagePage implements ActionListener {
-    private JFrame frame;
+public class ViewMessagePage extends Page implements ActionListener {
     private Container container;
 
     private JTextArea messageArea;
@@ -13,14 +12,15 @@ public class ViewMessagePage implements ActionListener {
 
     private Controller controller;
 
-    public ViewMessagePage(Controller controller, Message message) {
-        this.controller = controller;
-        this.frame = new JFrame("Message");
+    private Message message;
 
-        this.frame.setResizable(false);
-        this.frame.setLayout(null);
-        this.frame.setBounds(300, 90, 600, 600);
-        this.container = this.frame.getContentPane();
+    public ViewMessagePage(Controller controller,Message message) {
+        this.controller = controller;
+        setJFrame(new JFrame("Message"));
+        getJFrame().setResizable(false);
+        getJFrame().setLayout(null);
+        getJFrame().setBounds(300, 90, 600, 600);
+        this.container =  getJFrame().getContentPane();
 
         this.messageArea = new JTextArea();
         this.messageArea.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -41,11 +41,16 @@ public class ViewMessagePage implements ActionListener {
         this.returnButton.addActionListener(this);
 
         this.container.add(this.returnButton);
-
-        this.frame.setVisible(true);
+        getJFrame().setVisible(true);
 
     }
+    public void setMessage(Message message){
+        this.messageArea.setText(message.getContent());
+    }
 
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

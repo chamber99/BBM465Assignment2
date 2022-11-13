@@ -9,9 +9,8 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 
-public class RegisterFormPage implements ActionListener
+public class RegisterFormPage extends Page implements ActionListener
 {
-    private JFrame mainFrame;
     private Container container;
     private JLabel targetUsername;
     private JComboBox allUsers;
@@ -31,15 +30,15 @@ public class RegisterFormPage implements ActionListener
     public RegisterFormPage(Controller controller)
     {
         this.controller = controller;
-        this.mainFrame = new JFrame("Register Form");
-        this.mainFrame.setResizable(false);
-        this.mainFrame.setLayout(null);
-        this.mainFrame.setBounds(300,90,600,600);
-        this.container = this.mainFrame.getContentPane();
-        this.mainFrame.addWindowListener(new WindowAdapter() {
+        setJFrame(new JFrame("Register Form"));
+        getJFrame().setResizable(false);
+        getJFrame().setLayout(null);
+        getJFrame().setBounds(300,90,600,600);
+        this.container = getJFrame().getContentPane();
+        getJFrame().addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
                 try {
-                    controller.done();
+                    controller.storeMessageData();
                 } catch (IllegalBlockSizeException e) {
                     e.printStackTrace();
                 } catch (BadPaddingException e) {
@@ -121,8 +120,7 @@ public class RegisterFormPage implements ActionListener
         this.result .setSize(300, 20);
         this.result .setLocation(15, 330);
         this.container.add(this.result );
-
-        this.mainFrame.setVisible(true);
+        getJFrame().setVisible(true);
 
     }
 
@@ -141,6 +139,21 @@ public class RegisterFormPage implements ActionListener
             try {
                 message = controller.leaveMessage(data);
                 this.result.setText(message);
+            } catch (IllegalBlockSizeException illegalBlockSizeException) {
+                illegalBlockSizeException.printStackTrace();
+            } catch (BadPaddingException badPaddingException) {
+                badPaddingException.printStackTrace();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (InvalidKeyException invalidKeyException) {
+                invalidKeyException.printStackTrace();
+            }
+        }
+        else if(e.getSource() == this.homeButton){
+            getJFrame().setVisible(false);
+            controller.openPage(0);
+            try {
+                controller.storeMessageData();
             } catch (IllegalBlockSizeException illegalBlockSizeException) {
                 illegalBlockSizeException.printStackTrace();
             } catch (BadPaddingException badPaddingException) {

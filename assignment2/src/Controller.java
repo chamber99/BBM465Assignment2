@@ -13,19 +13,40 @@ import java.util.HashMap;
 
 public class Controller
 {
-    public ArrayList<User> allUsers;
-    public ArrayList<Message> allMessages;
-    public HashMap<String,String> allSalts;
-    public DataService service;
+    private ArrayList<User> allUsers;
+    private ArrayList<Message> allMessages;
+    private HashMap<String,String> allSalts;
+    private DataService service;
+    private boolean isUserCreated;
+    private boolean isMessageCreated;
 
     public Controller() throws IllegalBlockSizeException, IOException, BadPaddingException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException {
-        allUsers = new ArrayList<User>();
-        service = new DataService();
-        allUsers = service.fetchAllUsers();
-        allMessages = service.fetchAllMessages();
-        allSalts = new HashMap<String,String>();
+        this.service = new DataService();
+        this.allUsers = service.fetchAllUsers();
+        this.allMessages = service.fetchAllMessages();
+        this.allSalts = service.fetchAllSalts();
+        this.isUserCreated = false;
+        this.isMessageCreated = false;
     }
 
+    public void openPage(int pageNumber)
+    {
+        if(pageNumber == 0){
+            new MainPage(this);
+        }
+        else if(pageNumber == 1){
+            new CreateUserPage(this);
+        }
+        else if(pageNumber == 2){
+            new AccessMessagePage(this);
+        }
+        else if(pageNumber == 3){
+            new RegisterFormPage(this);
+        }
+    }
+    public void openPage(String index){
+        new ViewMessagePage(this,allMessages.get(Integer.parseInt(index)));
+    }
     public void createNewUser(String username,String password) throws IOException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         byte[] salt = HashingAlgorithm.generateSalt();
         byte[] hashedPassword = HashingAlgorithm.hash(salt,password);
@@ -33,14 +54,25 @@ public class Controller
         newUser.setUsername(username);
         newUser.setPassword(HashingAlgorithm.getHexRepresentation(hashedPassword));
         this.allUsers.add(newUser);
-        allSalts.put(username,new String(salt));
+        this.allSalts.put(username,new String(salt));
+        this.isUserCreated = true;
 
     }
-    public void done() throws IllegalBlockSizeException, BadPaddingException, IOException, InvalidKeyException {
-        /*this.service.storeUsers(allUsers);
-        this.service.storeSalts(allSalts);*/
-        this.service.storeMessages(allMessages);
+    public void storeUserData() throws IllegalBlockSizeException, BadPaddingException, IOException, InvalidKeyException {
+        if(isUserCreated){
+            this.service.storeUsers(allUsers);
+            this.service.storeSalts(allSalts);
+            this.isUserCreated = false;
+        }
     }
+    public void storeMessageData() throws IllegalBlockSizeException, BadPaddingException, IOException, InvalidKeyException {
+        if(isMessageCreated){
+            this.service.storeMessages(allMessages);
+            this.isMessageCreated = false;
+        }
+
+    }
+
     public void fetch() throws IllegalBlockSizeException, IOException, BadPaddingException, InvalidKeyException {
         this.allUsers = service.fetchAllUsers();
         for(User u : allUsers){
@@ -70,6 +102,7 @@ public class Controller
             messageContent+= "####&&&&&####"+HMAC;
             newMessage.setContent(messageContent);
             this.allMessages.add(newMessage);
+            this.isMessageCreated = true;
             message = "Your message has been sent!";
         }
         return message;
@@ -83,7 +116,7 @@ public class Controller
         }
         return null;
     }
-    public boolean verifyPassword(String enteredPassword,String username,User foundUser){
+    public boolean verifyPassword(String username,String enteredPassword,User foundUser){
         byte[] salt = this.allSalts.get(username).getBytes(StandardCharsets.UTF_8);
         if(HashingAlgorithm.getHexRepresentation(HashingAlgorithm.hash(salt,enteredPassword)).equals(foundUser.getPassword())){
             return true;
@@ -128,15 +161,15 @@ public class Controller
         if(user == null){
             return "There is no user with this username on the system";
         }
-        boolean passwordCheck = verifyPassword(data[3],data[2],user);
+        boolean passwordCheck = verifyPassword(data[2],data[3],user);
         if(!passwordCheck){
             return "Password is not correct!";
         }
         Message message = findMessage(data[0]);
-        foundMessage[0] = message;
         if(message == null){
             return "There is no message with this message ID on the system";
         }
+        foundMessage[0] = message;
         boolean receiverCheck = verifyMessageReceiver(message,user);
         if(!receiverCheck){
             return "You are not authorized to view this message";
@@ -149,20 +182,20 @@ public class Controller
         if(!HMACCheck){
             return "There are problems with the integrity or authenticity of the message";
         }
-        return "";
+        return "index:";
     }
 
-    public String viewMessage(String[] data)
-    {
+    public String viewMessage(String[] data) throws IllegalBlockSizeException, IOException, BadPaddingException, InvalidKeyException {
+        this.allMessages = service.fetchAllMessages();
         Message[] foundMessage = new Message[1];
         String message = checkData(data,foundMessage);
-        if(message.length() == 0)
+        if(message.length() != 0)
         {
-
+            message+= this.allMessages.indexOf(foundMessage);
         }
         return message;
-
     }
+
     public void print() throws IllegalBlockSizeException, IOException, BadPaddingException, InvalidKeyException {
         //this.service.readMessages();
         for(Message m : allMessages){

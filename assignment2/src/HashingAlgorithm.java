@@ -37,7 +37,10 @@ public class HashingAlgorithm
     {
         byte[] passwordArray = password.getBytes(StandardCharsets.UTF_8);
         byte[] saltedPassword = new byte[16+passwordArray.length];
+        System.out.println(saltedPassword.length);
         int index = 0;
+        System.out.println("salt"+salt.length);
+        System.out.println("saltedpas:"+saltedPassword.length);
         for(byte s : salt){
             saltedPassword[index++] = s;
         }

@@ -45,7 +45,7 @@ public class DataService
         FileInputStream inputMessage = new FileInputStream("message.data");
         int bytes = inputMessage.available();
         if(bytes > 2){
-            byte[] inputArray = new byte[inputMessage.available()];
+            byte[] inputArray = new byte[bytes];
             inputMessage.read(inputArray);
             byte[] decryptedData = securityProvider.CBCDecryption(inputArray);
             String messages = new String(decryptedData);
@@ -92,34 +92,32 @@ public class DataService
         }
         writeData(userData.getBytes(StandardCharsets.UTF_8),1);
     }
-    public void storeSalts(HashMap<User,String> allSalts) throws IllegalBlockSizeException, BadPaddingException, IOException, InvalidKeyException {
+    public void storeSalts(HashMap<String,String> allSalts) throws IllegalBlockSizeException, BadPaddingException, IOException, InvalidKeyException {
         String saltData = "";
-        int length = allSalts.entrySet().size();
+        int length = allSalts.keySet().size();
         int count = 0;
-        for(Map.Entry<User,String> entry : allSalts.entrySet()){
+        for(Map.Entry<String,String> entry : allSalts.entrySet()){
             if (count == length-1){
-                saltData+= entry.getKey().getUsername()+" "+entry.getValue();
+                saltData+= entry.getKey()+"######sep######"+entry.getValue();
             }
             else{
-                saltData+= entry.getKey().getUsername()+" "+entry.getValue() + "\n";
+                saltData+= entry.getKey()+"######sep######"+entry.getValue() + "#######newline######";
+                count++;
             }
         }
         writeData(saltData.getBytes(StandardCharsets.UTF_8),2);
     }
     public boolean writeData(byte[] data,int destination) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, IOException {
         byte[] encryptedData = securityProvider.CBCEncryption(data);
-        System.out.println(new String(encryptedData));
         if(destination == 1)
         {
             FileOutputStream fos = new FileOutputStream("user.data");
             fos.write(encryptedData);
-            //fos.close();
         }
         else if(destination == 2)
         {
-            FileOutputStream fos = new FileOutputStream("salt.data",true);
+            FileOutputStream fos = new FileOutputStream("salt.data");
             fos.write(encryptedData);
-            //fos.close();
         }
         return true;
     }
@@ -127,8 +125,10 @@ public class DataService
     {
         ArrayList<User> allUsers = new ArrayList<User>();
         FileInputStream inputStream = new FileInputStream("user.data");
-        if(inputStream.available() != 0){
-            byte[] inputArray = new byte[inputStream.available()];
+        // If file is not empty
+        int length = inputStream.available();
+        if(length != 0){
+            byte[] inputArray = new byte[length];
             inputStream.read(inputArray);
             byte[] decryptedData = securityProvider.CBCDecryption(inputArray);
             String users = new String(decryptedData);
@@ -150,16 +150,20 @@ public class DataService
     public HashMap<String,String> fetchAllSalts() throws IOException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         HashMap<String,String> allSalts = new HashMap<>();
         FileInputStream inputStream = new FileInputStream("salt.data");
-        byte[] inputArray = new byte[inputStream.available()];
-        inputStream.read(inputArray);
-        byte[] decryptedData = securityProvider.CBCDecryption(inputArray);
-        String salts = new String(decryptedData);
-        String[] split = salts.split("\n");
-        for(String s : split){
-            String[] saltData = s.split("\\s+");
-            String username = saltData[0];
-            String salt = saltData[1];
-            allSalts.put(username,salt);
+        int length = inputStream.available();
+        if(length != 0){
+            byte[] inputArray = new byte[length];
+            inputStream.read(inputArray);
+            byte[] decryptedData = securityProvider.CBCDecryption(inputArray);
+            String salts = new String(decryptedData);
+            String[] split = salts.split("#######newline######");
+            for(String s : split){
+                System.out.println(s);
+                String[] saltData = s.split("######sep######");
+                String username = saltData[0];
+                String salt = saltData[1];
+                allSalts.put(username,salt);
+            }
         }
         return allSalts;
     }

@@ -1,11 +1,13 @@
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.security.InvalidKeyException;
 
-public class AccessMessagePage implements ActionListener {
-    JFrame frame;
-
+public class AccessMessagePage extends Page implements ActionListener {
     Container container;
     Controller controller;
 
@@ -34,12 +36,12 @@ public class AccessMessagePage implements ActionListener {
 
     public AccessMessagePage(Controller controller) {
         this.controller = controller;
-        this.frame = new JFrame("Message View");
+        setJFrame(new JFrame("Message View"));
 
-        this.frame.setResizable(false);
-        this.frame.setLayout(null);
-        this.frame.setBounds(300, 90, 600, 600);
-        this.container = this.frame.getContentPane();
+        getJFrame().setResizable(false);
+        getJFrame().setLayout(null);
+        getJFrame().setBounds(300, 90, 600, 600);
+        this.container = getJFrame().getContentPane();
 
         this.codeNameLabel = new JLabel("Message Codename");
         this.codeNameLabel.setFont(new Font("Arial", Font.BOLD, 14));
@@ -112,13 +114,13 @@ public class AccessMessagePage implements ActionListener {
         this.togglePasswordVisibility.setLocation(250,300);
 
 
-        togglePasswordVisibility.addChangeListener(changeEvent -> {
+       /* togglePasswordVisibility.addChangeListener(changeEvent -> {
             if (togglePasswordVisibility.isSelected()) {
                 userPassword.setEchoChar((char) 0);
             } else {
                 userPassword.setEchoChar('\u25CF');
             }
-        });
+        });*/
 
         this.container.add(this.togglePasswordVisibility);
 
@@ -139,8 +141,6 @@ public class AccessMessagePage implements ActionListener {
         this.container.add(this.resetButton);
 
 
-
-
         this.homeButton = new JButton("Home");
         this.homeButton.setFont(new Font("Arial", Font.PLAIN, 15));
         this.homeButton.setSize(150, 40);
@@ -148,19 +148,34 @@ public class AccessMessagePage implements ActionListener {
         this.homeButton.addActionListener(this);
 
         this.container.add(homeButton);
-
-
-
-
-
-
-        this.frame.setVisible(true);
+        getJFrame().setVisible(true);
 
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == this.homeButton){
+            this.getJFrame().setVisible(false);
+            controller.openPage(0);
+        }
+        else if(e.getSource() == this.viewButton){
+            String[] data = {messageCodeName.getText(),new String(messagePassword.getPassword()),userName.getText(),new String(userPassword.getPassword())};
+            try {
+                String message = controller.viewMessage(data);
+                if(message.startsWith("index")){
+                    String index = message.split(":")[1];
+                    controller.openPage(index);
+                }
+            } catch (IllegalBlockSizeException illegalBlockSizeException) {
+                illegalBlockSizeException.printStackTrace();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (BadPaddingException badPaddingException) {
+                badPaddingException.printStackTrace();
+            } catch (InvalidKeyException invalidKeyException) {
+                invalidKeyException.printStackTrace();
+            }
+        }
 
     }
 }
