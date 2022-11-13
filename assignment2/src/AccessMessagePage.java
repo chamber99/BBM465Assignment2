@@ -114,7 +114,7 @@ public class AccessMessagePage extends Page implements ActionListener {
         this.togglePasswordVisibility.setLocation(250,300);
 
 
-       /* togglePasswordVisibility.addChangeListener(changeEvent -> {
+        togglePasswordVisibility.addChangeListener(changeEvent -> {
             if (togglePasswordVisibility.isSelected()) {
                 userPassword.setEchoChar((char) 0);
                 messagePassword.setEchoChar((char) 0);
@@ -122,7 +122,7 @@ public class AccessMessagePage extends Page implements ActionListener {
                 userPassword.setEchoChar('\u25CF');
                 messagePassword.setEchoChar('\u25CF');
             }
-        });*/
+        });
 
         this.container.add(this.togglePasswordVisibility);
 
