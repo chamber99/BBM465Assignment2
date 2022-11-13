@@ -68,6 +68,7 @@ public class ViewMessagePage extends Page implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        controller.openPage(0);
+        this.getJFrame().setVisible(false);
     }
 }

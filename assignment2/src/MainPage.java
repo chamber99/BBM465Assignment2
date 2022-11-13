@@ -17,13 +17,14 @@ public class MainPage extends Page implements ActionListener
         this.controller = controller;
         setJFrame(new JFrame("Main Page"));
         getJFrame().setLayout(null);
-        getJFrame().setBounds(300,90,600,600);
+        getJFrame().setBounds(650,250,600,600);
         container = getJFrame().getContentPane();
         title = new JLabel("Welcome to MessageBox");
         title.setFont(new Font("Arial", Font.PLAIN, 40));
         title.setSize(500, 50);
         title.setLocation(70, 100);
         container.add(title);
+        this.getJFrame().setResizable(false);
 
         createUser = new JButton("Create User");
         createUser.setFont(new Font("Arial", Font.PLAIN, 20));

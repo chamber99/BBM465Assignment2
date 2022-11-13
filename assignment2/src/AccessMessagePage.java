@@ -164,6 +164,7 @@ public class AccessMessagePage extends Page implements ActionListener {
             try {
                 String message = controller.viewMessage(data);
                 if(message.startsWith("index")){
+                    this.getJFrame().setVisible(false);
                     String index = message.split(":")[1];
                     controller.openPage(index);
                 }
