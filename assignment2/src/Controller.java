@@ -24,7 +24,7 @@ public class Controller
         this.service = new DataService();
         this.allUsers = service.fetchAllUsers();
         this.allMessages = service.fetchAllMessages();
-        this.allSalts = service.fetchAllSalts();
+        //this.allSalts = service.fetchAllSalts();
         this.isUserCreated = false;
         this.isMessageCreated = false;
     }
@@ -49,19 +49,20 @@ public class Controller
     }
     public void createNewUser(String username,String password) throws IOException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         byte[] salt = HashingAlgorithm.generateSalt();
-        byte[] hashedPassword = HashingAlgorithm.hash(salt,password);
+        byte[] hashedPassword = HashingAlgorithm.useSHA256(password.getBytes(StandardCharsets.UTF_8));
         User newUser = new User();
         newUser.setUsername(username);
         newUser.setPassword(HashingAlgorithm.getHexRepresentation(hashedPassword));
         this.allUsers.add(newUser);
-        this.allSalts.put(username,new String(salt));
+        //this.allSalts.put(username,new String(salt));
+        //System.out.println("yavuzunki:"+this.allSalts.get("yedmrl").getBytes(StandardCharsets.UTF_8).length);
         this.isUserCreated = true;
 
     }
     public void storeUserData() throws IllegalBlockSizeException, BadPaddingException, IOException, InvalidKeyException {
         if(isUserCreated){
             this.service.storeUsers(allUsers);
-            this.service.storeSalts(allSalts);
+            //this.service.storeSalts(allSalts);
             this.isUserCreated = false;
         }
     }
@@ -117,8 +118,8 @@ public class Controller
         return null;
     }
     public boolean verifyPassword(String username,String enteredPassword,User foundUser){
-        byte[] salt = this.allSalts.get(username).getBytes(StandardCharsets.UTF_8);
-        if(HashingAlgorithm.getHexRepresentation(HashingAlgorithm.hash(salt,enteredPassword)).equals(foundUser.getPassword())){
+        //yte[] salt = this.allSalts.get(username).getBytes(StandardCharsets.UTF_8);
+        if(HashingAlgorithm.getHexRepresentation(HashingAlgorithm.useSHA256(enteredPassword.getBytes(StandardCharsets.UTF_8))).equals(foundUser.getPassword())){
             return true;
         }
         return false;
@@ -149,7 +150,7 @@ public class Controller
 
     public boolean verifyMessageReceiver(Message foundMessage,User viewer)
     {
-        if(foundMessage.getReceiver().equals(viewer)){
+        if(foundMessage.getReceiver().getUsername().equals(viewer.getUsername())){
             return true;
         }
         return false;
@@ -178,10 +179,10 @@ public class Controller
         if(!messagePasswordCheck){
             return "Message password is not correct";
         }
-        boolean HMACCheck = checkHMAC(message,data[1]);
+        /*boolean HMACCheck = checkHMAC(message,data[1]);
         if(!HMACCheck){
             return "There are problems with the integrity or authenticity of the message";
-        }
+        }*/
         return "index:";
     }
 
@@ -191,7 +192,7 @@ public class Controller
         String message = checkData(data,foundMessage);
         if(message.length() != 0)
         {
-            message+= this.allMessages.indexOf(foundMessage);
+            message+= this.allMessages.indexOf(foundMessage[0]);
         }
         return message;
     }

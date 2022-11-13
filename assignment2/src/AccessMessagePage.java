@@ -141,13 +141,12 @@ public class AccessMessagePage extends Page implements ActionListener {
         this.resetButton.addActionListener(this);
 
         this.container.add(this.resetButton);
-
-
         this.homeButton = new JButton("Home");
         this.homeButton.setFont(new Font("Arial", Font.PLAIN, 15));
         this.homeButton.setSize(150, 40);
         this.homeButton.setLocation(220, 430);
         this.homeButton.addActionListener(this);
+
 
         this.container.add(homeButton);
         getJFrame().setVisible(true);

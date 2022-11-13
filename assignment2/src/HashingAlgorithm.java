@@ -78,6 +78,7 @@ public class HashingAlgorithm
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
+        System.out.println(salt.length);
         return salt;
     }
 }

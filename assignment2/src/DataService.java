@@ -99,6 +99,7 @@ public class DataService
         for(Map.Entry<String,String> entry : allSalts.entrySet()){
             if (count == length-1){
                 saltData+= entry.getKey()+"######sep######"+entry.getValue();
+                System.out.println("salt su kadar : "+entry.getValue().getBytes(StandardCharsets.UTF_8).length);
             }
             else{
                 saltData+= entry.getKey()+"######sep######"+entry.getValue() + "#######newline######";
