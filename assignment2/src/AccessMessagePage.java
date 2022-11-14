@@ -11,6 +11,8 @@ public class AccessMessagePage extends Page implements ActionListener {
     Container container;
     Controller controller;
 
+    Verification verification;
+
     JTextField messageCodeName;
     JLabel codeNameLabel;
 
@@ -35,6 +37,7 @@ public class AccessMessagePage extends Page implements ActionListener {
 
 
     public AccessMessagePage(Controller controller) {
+        this.verification = new Verification();
         this.controller = controller;
         setJFrame(new JFrame("Message View"));
 
@@ -51,6 +54,7 @@ public class AccessMessagePage extends Page implements ActionListener {
         this.container.add(this.codeNameLabel);
 
         this.messageCodeName = new JTextField();
+        this.messageCodeName.setInputVerifier(this.verification);
         this.messageCodeName.setFont(new Font("Arial", Font.PLAIN, 15));
         this.messageCodeName.setSize(200, 30);
         this.messageCodeName.setLocation(250, 40);
@@ -65,6 +69,7 @@ public class AccessMessagePage extends Page implements ActionListener {
         this.container.add(this.messagePasswordLabel);
 
         this.messagePassword = new JPasswordField();
+        this.messagePassword.setInputVerifier(this.verification);
         this.messagePassword.setFont(new Font("Arial", Font.PLAIN, 15));
         this.messagePassword.setSize(200, 30);
         this.messagePassword.setLocation(250, 100);
