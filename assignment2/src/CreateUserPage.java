@@ -22,8 +22,12 @@ public class CreateUserPage extends Page implements ActionListener
     JButton submitButton;
     Controller controller;
 
+    InputVerifier verifier;
+
     public CreateUserPage(Controller controller)
     {
+        this.verifier = new Verification();
+
         this.controller = controller;
         setJFrame(new JFrame("Create User"));
         getJFrame().setResizable(false);
@@ -45,6 +49,7 @@ public class CreateUserPage extends Page implements ActionListener
             }
         });
         container =  getJFrame().getContentPane();
+        this.container.setName("createUserPage");
         title = new JLabel("Create User");
         title.setFont(new Font("Arial", Font.PLAIN, 30));
         title.setSize(300, 50);
@@ -59,6 +64,7 @@ public class CreateUserPage extends Page implements ActionListener
         userTextField.setFont(new Font("Arial", Font.PLAIN, 15));
         userTextField.setSize(195, 30);
         userTextField.setLocation(225, 175);
+        userTextField.setInputVerifier(verifier);
         container.add(userTextField);
         password = new JLabel("Password");
         password.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -66,6 +72,7 @@ public class CreateUserPage extends Page implements ActionListener
         password.setLocation(100, 225);
         container.add(password);
         passwordTextField = new JPasswordField();
+        passwordTextField.setInputVerifier(verifier);
         passwordTextField.setFont(new Font("Arial", Font.PLAIN, 15));
         passwordTextField.setSize(195, 30);
         passwordTextField.setLocation(225, 225);

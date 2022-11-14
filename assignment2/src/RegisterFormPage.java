@@ -35,6 +35,7 @@ public class RegisterFormPage extends Page implements ActionListener
         getJFrame().setLayout(null);
         getJFrame().setBounds(300,90,600,600);
         this.container = getJFrame().getContentPane();
+        this.container.setName("registerFormPage");
         getJFrame().addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
                 try {

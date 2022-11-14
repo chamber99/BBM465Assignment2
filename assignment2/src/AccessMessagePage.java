@@ -45,6 +45,7 @@ public class AccessMessagePage extends Page implements ActionListener {
         getJFrame().setLayout(null);
         getJFrame().setBounds(300, 90, 600, 600);
         this.container = getJFrame().getContentPane();
+        this.container.setName("accessMessagePage");
 
         this.codeNameLabel = new JLabel("Message Codename");
         this.codeNameLabel.setFont(new Font("Arial", Font.BOLD, 14));
@@ -170,6 +171,7 @@ public class AccessMessagePage extends Page implements ActionListener {
                 String message = controller.viewMessage(data);
                 if(message.startsWith("index")){
                     this.getJFrame().setVisible(false);
+
                     String index = message.split(":")[1];
                     controller.openPage(index);
                 }
