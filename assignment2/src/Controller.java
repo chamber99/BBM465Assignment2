@@ -190,7 +190,7 @@ public class Controller
         this.allMessages = service.fetchAllMessages();
         Message[] foundMessage = new Message[1];
         String message = checkData(data,foundMessage);
-        if(message.length() != 0)
+        if(message.startsWith("index:"))
         {
             message+= this.allMessages.indexOf(foundMessage[0]);
         }

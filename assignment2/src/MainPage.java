@@ -18,6 +18,7 @@ public class MainPage extends Page implements ActionListener
         setJFrame(new JFrame("Main Page"));
         getJFrame().setLayout(null);
         getJFrame().setBounds(650,250,600,600);
+        getJFrame().setLocationRelativeTo(null);
         container = getJFrame().getContentPane();
         this.container.setName("mainPage");
         title = new JLabel("Welcome to MessageBox");

@@ -44,6 +44,7 @@ public class AccessMessagePage extends Page implements ActionListener {
         getJFrame().setResizable(false);
         getJFrame().setLayout(null);
         getJFrame().setBounds(300, 90, 600, 600);
+        getJFrame().setLocationRelativeTo(null);
         this.container = getJFrame().getContentPane();
         this.container.setName("accessMessagePage");
 

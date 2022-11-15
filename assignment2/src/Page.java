@@ -18,6 +18,5 @@ public class Page
 
     public void setJFrame(JFrame jFrame) {
         this.jFrame = jFrame;
-        this.jFrame.setLocationRelativeTo(null);
     }
 }
