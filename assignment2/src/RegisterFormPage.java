@@ -27,8 +27,10 @@ public class RegisterFormPage extends Page implements ActionListener
     private JLabel result;
     private Controller controller;
 
-    public RegisterFormPage(Controller controller)
-    {
+    private Verification verification;
+
+    public RegisterFormPage(Controller controller) {
+        this.verification = new Verification();
         this.controller = controller;
         setJFrame(new JFrame("Register Form"));
         getJFrame().setResizable(false);
@@ -138,8 +140,10 @@ public class RegisterFormPage extends Page implements ActionListener
             String[] data = {targetUsername,password,confirmPassword,messageID,messageContent};
             String message = "";
             try {
-                message = controller.leaveMessage(data);
-                this.result.setText(message);
+                if(verification.verifyRegisterMessage(passwordTextField,confirmPasswordTextField,codenameTextField)){
+                    message = controller.leaveMessage(data);
+                    this.result.setText(message);
+                }
             } catch (IllegalBlockSizeException illegalBlockSizeException) {
                 illegalBlockSizeException.printStackTrace();
             } catch (BadPaddingException badPaddingException) {

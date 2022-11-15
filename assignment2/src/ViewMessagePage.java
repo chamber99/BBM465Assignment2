@@ -42,7 +42,6 @@ public class ViewMessagePage extends Page implements ActionListener {
 
         this.messageArea.setAutoscrolls(true);
 
-
         this.container.add(this.returnButton);
 
 
@@ -52,7 +51,6 @@ public class ViewMessagePage extends Page implements ActionListener {
         scroll.setLocation(100, 50);
 
         getJFrame().add(scroll);
-
 
         getJFrame().setVisible(true);
 

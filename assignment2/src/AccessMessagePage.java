@@ -55,7 +55,7 @@ public class AccessMessagePage extends Page implements ActionListener {
         this.container.add(this.codeNameLabel);
 
         this.messageCodeName = new JTextField();
-        this.messageCodeName.setInputVerifier(this.verification);
+
         this.messageCodeName.setFont(new Font("Arial", Font.PLAIN, 15));
         this.messageCodeName.setSize(200, 30);
         this.messageCodeName.setLocation(250, 40);
@@ -70,7 +70,7 @@ public class AccessMessagePage extends Page implements ActionListener {
         this.container.add(this.messagePasswordLabel);
 
         this.messagePassword = new JPasswordField();
-        this.messagePassword.setInputVerifier(this.verification);
+
         this.messagePassword.setFont(new Font("Arial", Font.PLAIN, 15));
         this.messagePassword.setSize(200, 30);
         this.messagePassword.setLocation(250, 100);
@@ -116,8 +116,8 @@ public class AccessMessagePage extends Page implements ActionListener {
         this.container.add(this.userPassword);
 
         this.togglePasswordVisibility = new JCheckBox("Show Password");
-        this.togglePasswordVisibility.setSize(170,25);
-        this.togglePasswordVisibility.setLocation(250,300);
+        this.togglePasswordVisibility.setSize(170, 25);
+        this.togglePasswordVisibility.setLocation(250, 300);
 
 
         togglePasswordVisibility.addChangeListener(changeEvent -> {
@@ -161,19 +161,21 @@ public class AccessMessagePage extends Page implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == this.homeButton){
+        if (e.getSource() == this.homeButton) {
             this.getJFrame().setVisible(false);
             controller.openPage(0);
-        }
-        else if(e.getSource() == this.viewButton){
-            String[] data = {messageCodeName.getText(),new String(messagePassword.getPassword()),userName.getText(),new String(userPassword.getPassword())};
+        } else if (e.getSource() == this.viewButton) {
+            String[] data = {messageCodeName.getText(), new String(messagePassword.getPassword()), userName.getText(), new String(userPassword.getPassword())};
+
             try {
                 String message = controller.viewMessage(data);
-                if(message.startsWith("index")){
+                if (message.startsWith("index")) {
                     this.getJFrame().setVisible(false);
 
                     String index = message.split(":")[1];
                     controller.openPage(index);
+                } else {
+                    JOptionPane.showMessageDialog(container, message, "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (IllegalBlockSizeException illegalBlockSizeException) {
                 illegalBlockSizeException.printStackTrace();
@@ -184,6 +186,12 @@ public class AccessMessagePage extends Page implements ActionListener {
             } catch (InvalidKeyException invalidKeyException) {
                 invalidKeyException.printStackTrace();
             }
+
+        } else {
+            this.messagePassword.setText("");
+            this.messageCodeName.setText("");
+            this.userName.setText("");
+            this.userPassword.setText("");
         }
 
     }
