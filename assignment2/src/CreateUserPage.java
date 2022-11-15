@@ -33,6 +33,7 @@ public class CreateUserPage extends Page implements ActionListener
         getJFrame().setResizable(false);
         getJFrame().setLayout(null);
         getJFrame().setBounds(300,90,600,600);
+        getJFrame().setLocationRelativeTo(null);
         getJFrame().addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
                 try {
