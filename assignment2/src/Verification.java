@@ -32,9 +32,9 @@ public class Verification extends InputVerifier {
 
         String errorMessage = "";
 
-        if(passwordField.getPassword().length < 8){
+        if(passwordField.getPassword().length < 6){
             passwordValid = false;
-            errorMessage += " * Password should be at least 8 characters long.\n";
+            errorMessage += " * Password should be at least 6 characters long.\n";
         }
 
         if(Arrays.stream(usernames).anyMatch(s -> s.equals(username.getText()))){
