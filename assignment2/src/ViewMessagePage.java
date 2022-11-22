@@ -46,7 +46,7 @@ public class ViewMessagePage extends Page implements ActionListener {
 
 
         JScrollPane scroll = new JScrollPane(messageArea,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scroll.setSize(400, 350);
         scroll.setLocation(100, 50);
 
