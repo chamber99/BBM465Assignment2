@@ -8,12 +8,21 @@ import java.util.Arrays;
 
 public class SecurityProvider
 {
+
+    /*
+        This class is created to provide encryption and decryption algorithms.
+        CBC mode is implemented by using the ECB scheme from the last homework.
+        IV and nonce values are hard coded as shown in the constructor.
+
+     */
     private final Cipher encryptionAlgorithm;
     private final Cipher decryptionAlgorithm;
     private final SecretKey key;
     private final byte[] IV;
 
-    public SecurityProvider() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+    public SecurityProvider() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException
+    {
+        // Hard coded IV and Key values.
         this.key = generateKey("5yB+/=K%");
         this.IV = generateIVorNonce("Kx+/*21y");
         this.encryptionAlgorithm = Cipher.getInstance("DES/ECB/NoPadding");;
@@ -22,7 +31,9 @@ public class SecurityProvider
         this.decryptionAlgorithm.init(Cipher.DECRYPT_MODE, key);
 
     }
-    public byte[] padPlainText(byte[] plainText) {
+    public byte[] padPlainText(byte[] plainText)
+    {
+        // Padding algorithm.
         byte[] byteArray = plainText;
         int remainder = byteArray.length % 8;
         byte[] padded = new byte[byteArray.length + (8 - remainder)];
@@ -102,6 +113,7 @@ public class SecurityProvider
         return clearPadding(decryptedMessage);
     }
 
+    // XOR operation
     public static byte[] XOR(byte[] input1, byte[] input2) {
         byte[] resultArray = new byte[8];
         for (int i = 0; i < 8; i++) {

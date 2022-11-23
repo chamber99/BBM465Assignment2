@@ -1,5 +1,7 @@
 public class Message
 {
+    // Message model
+
     private String message_id;
     private String content;
     private String password;

@@ -9,7 +9,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 
-public class RegisterFormPage extends Page implements ActionListener
+public class RegisterFormPage implements ActionListener
 {
     private Container container;
     private JLabel targetUsername;
@@ -26,22 +26,25 @@ public class RegisterFormPage extends Page implements ActionListener
     private JButton sendButton;
     private JLabel result;
     private Controller controller;
+    private JFrame jFrame;
 
     private Verification verification;
 
+    // Page for leaving messages to the system users.
     public RegisterFormPage(Controller controller) {
         this.verification = new Verification();
         this.controller = controller;
-        setJFrame(new JFrame("Register Form"));
-        getJFrame().setResizable(false);
-        getJFrame().setLayout(null);
-        getJFrame().setBounds(300,90,600,600);
-        this.container = getJFrame().getContentPane();
+        this.jFrame = new JFrame("Register Form");
+        this.jFrame.setResizable(false);
+        this.jFrame.setLayout(null);
+        this.jFrame.setBounds(300,90,600,600);
+        this.container = this.jFrame.getContentPane();
         this.container.setName("registerFormPage");
-        getJFrame().setLocationRelativeTo(null);
-        getJFrame().addWindowListener(new WindowAdapter() {
+        this.jFrame.setLocationRelativeTo(null);
+        this.jFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
                 try {
+                    // If user closes the windows,new messages are stored in the database if necessary.
                     controller.storeMessageData();
                 } catch (IllegalBlockSizeException e) {
                     e.printStackTrace();
@@ -60,6 +63,7 @@ public class RegisterFormPage extends Page implements ActionListener
         this.targetUsername.setSize(150, 20);
         this.targetUsername.setLocation(15, 40);
         this.container.add(this.targetUsername);
+        // Creating a combo box to list all system users.
         this.allUsers = new JComboBox(this.controller.getUsernames());
         this.allUsers.setSize(100,30);
         this.allUsers.setLocation(170,35);
@@ -69,6 +73,7 @@ public class RegisterFormPage extends Page implements ActionListener
         this.password.setSize(150, 20);
         this.password.setLocation(15, 90);
         this.container.add(password);
+        // Creating password fields to assign a password to the message.
         this.passwordTextField = new JPasswordField();
         this.passwordTextField.setFont(new Font("Arial", Font.PLAIN, 15));
         this.passwordTextField.setSize(100, 30);
@@ -89,6 +94,7 @@ public class RegisterFormPage extends Page implements ActionListener
         this.messageCodeName.setSize(220, 20);
         this.messageCodeName.setLocation(15, 150);
         this.container.add(messageCodeName);
+        // Creating a text field to take the message ID of the new message.
         this.codenameTextField = new JTextField();
         this.codenameTextField.setFont(new Font("Arial", Font.PLAIN, 15));
         this.codenameTextField.setSize(100, 30);
@@ -99,11 +105,20 @@ public class RegisterFormPage extends Page implements ActionListener
         this.messageEntry.setSize(200, 20);
         this.messageEntry.setLocation(15, 300);
         this.container.add(this.messageEntry);
+        // Creating a text area to take the content of the new message.
         this.messageEntryTextField = new JTextArea();
         this.messageEntryTextField.setFont(new Font("Arial", Font.PLAIN, 15));
         this.messageEntryTextField.setBounds(250,220,300,200);
         this.messageEntryTextField.setBorder(BorderFactory.createLineBorder(Color.black,1));
         this.container.add(messageEntryTextField);
+        // Making message area scrollable for large messages.
+        JScrollPane scroll = new JScrollPane(messageEntryTextField,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scroll.setSize(300, 200);
+        scroll.setLocation(250, 220);
+        this.jFrame.add(scroll);
+
+        // Creating a button to go back to the main page.
         this.homeButton = new JButton("Home");
         this.homeButton.setFont(new Font("Arial", Font.PLAIN, 15));
         this.homeButton.setSize(150, 40);
@@ -111,6 +126,7 @@ public class RegisterFormPage extends Page implements ActionListener
         this.homeButton.addActionListener(this);
         container.add(this.homeButton);
 
+        // Creating a button to send the message.
         this.sendButton = new JButton("Create Message");
         this.sendButton .setFont(new Font("Arial", Font.PLAIN, 15));
         this.sendButton .setSize(150, 40);
@@ -118,13 +134,14 @@ public class RegisterFormPage extends Page implements ActionListener
         this.sendButton .addActionListener(this);
         container.add(this.sendButton);
 
+        // Creating a label to show the status to the message sender.
         this.result = new JLabel("");
         this.result.setForeground(Color.red);
         this.result .setFont(new Font("Arial", Font.PLAIN, 12));
         this.result .setSize(300, 20);
         this.result .setLocation(15, 330);
         this.container.add(this.result );
-        getJFrame().setVisible(true);
+        this.jFrame.setVisible(true);
 
     }
 
@@ -141,8 +158,10 @@ public class RegisterFormPage extends Page implements ActionListener
             String[] data = {targetUsername,password,confirmPassword,messageID,messageContent};
             String message = "";
             try {
+                // If all input fields are verified,using controller to leave the message.
                 if(verification.verifyRegisterMessage(passwordTextField,confirmPasswordTextField,codenameTextField)){
                     message = controller.leaveMessage(data);
+                    // Informing the message sender about the result here.
                     this.result.setText(message);
                 }
             } catch (IllegalBlockSizeException illegalBlockSizeException) {
@@ -156,8 +175,9 @@ public class RegisterFormPage extends Page implements ActionListener
             }
         }
         else if(e.getSource() == this.homeButton){
-            getJFrame().setVisible(false);
+            // If user clicks the home button, controller opens the home page and writes the messages to the database if necessary.
             controller.openPage(0);
+            this.jFrame.setVisible(false);
             try {
                 controller.storeMessageData();
             } catch (IllegalBlockSizeException illegalBlockSizeException) {
@@ -170,20 +190,5 @@ public class RegisterFormPage extends Page implements ActionListener
                 invalidKeyException.printStackTrace();
             }
         }
-        else{
-            try {
-                controller.print();
-            } catch (IllegalBlockSizeException illegalBlockSizeException) {
-                illegalBlockSizeException.printStackTrace();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            } catch (BadPaddingException badPaddingException) {
-                badPaddingException.printStackTrace();
-            } catch (InvalidKeyException invalidKeyException) {
-                invalidKeyException.printStackTrace();
-            }
-
-        }
-
     }
 }

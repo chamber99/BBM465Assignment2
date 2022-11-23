@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ViewMessagePage extends Page implements ActionListener {
+public class ViewMessagePage implements ActionListener {
     private Container container;
 
     private JTextArea messageArea;
@@ -12,28 +12,32 @@ public class ViewMessagePage extends Page implements ActionListener {
 
     private Controller controller;
 
-    private Message message;
+    private JFrame jFrame;
 
+    // Page for viewing the content of the accessed message.
     public ViewMessagePage(Controller controller, Message message) {
         this.controller = controller;
-        setJFrame(new JFrame("Message"));
-        getJFrame().setResizable(false);
-        getJFrame().setLayout(null);
-        getJFrame().setBounds(300, 90, 600, 600);
-        this.container = getJFrame().getContentPane();
+        this.jFrame = new JFrame("Message");
+        this.jFrame.setResizable(false);
+        this.jFrame.setLayout(null);
+        this.jFrame.setBounds(300, 90, 600, 600);
+        this.jFrame.setLocationRelativeTo(null);
+        this.container = this.jFrame.getContentPane();
 
+        // Creating text area to show the content of the message.
         this.messageArea = new JTextArea();
         this.messageArea.setFont(new Font("Arial", Font.PLAIN, 15));
         this.messageArea.setSize(400, 350);
         this.messageArea.setLocation(100, 50);
         this.messageArea.setEditable(false);
 
+        // Setting the message content by using the input message.
         this.messageArea.setText(message.getContent());
         this.messageArea.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 
         this.container.add(this.messageArea);
 
-
+        // Creating a button to go back to the main page.
         this.returnButton = new JButton("Return");
         this.returnButton.setFont(new Font("Arial", Font.PLAIN, 15));
         this.returnButton.setSize(140, 40);
@@ -43,30 +47,22 @@ public class ViewMessagePage extends Page implements ActionListener {
         this.messageArea.setAutoscrolls(true);
 
         this.container.add(this.returnButton);
-
-
+        // Making message area scrollable to be able to show long messages both vertically and horizontally.
         JScrollPane scroll = new JScrollPane(messageArea,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scroll.setSize(400, 350);
         scroll.setLocation(100, 50);
 
-        getJFrame().add(scroll);
+        this.jFrame.add(scroll);
 
-        getJFrame().setVisible(true);
+        this.jFrame.setVisible(true);
 
-    }
-
-    public void setMessage(Message message) {
-        this.messageArea.setText(message.getContent());
-    }
-
-    public void setController(Controller controller) {
-        this.controller = controller;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        // If user click the return button,controller opens the main page.
         controller.openPage(0);
-        this.getJFrame().setVisible(false);
+        this.jFrame.setVisible(false);
     }
 }

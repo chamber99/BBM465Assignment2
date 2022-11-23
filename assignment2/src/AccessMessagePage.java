@@ -7,46 +7,38 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 
-public class AccessMessagePage extends Page implements ActionListener {
-    Container container;
-    Controller controller;
-
-    Verification verification;
-
-    JTextField messageCodeName;
-    JLabel codeNameLabel;
-
-    JPasswordField messagePassword;
-    JLabel messagePasswordLabel;
-
-    JTextField userName;
-    JLabel userNameLabel;
-
-    JPasswordField userPassword;
-    JLabel userPasswordLabel;
-
-    JSeparator separator;
-
-    JCheckBox togglePasswordVisibility;
-
-    JButton viewButton;
-
-    JButton resetButton;
-
-    JButton homeButton;
+// Page for accessing messages.
+public class AccessMessagePage implements ActionListener {
+    private JFrame jFrame;
+    private Container container;
+    private Controller controller;
+    private Verification verification;
+    private JTextField messageCodeName;
+    private JLabel codeNameLabel;
+    private JPasswordField messagePassword;
+    private JLabel messagePasswordLabel;
+    private JTextField userName;
+    private JLabel userNameLabel;
+    private JPasswordField userPassword;
+    private JLabel userPasswordLabel;
+    private JSeparator separator;
+    private JCheckBox togglePasswordVisibility;
+    private JButton viewButton;
+    private JButton resetButton;
+    private JButton homeButton;
 
 
     public AccessMessagePage(Controller controller) {
         this.verification = new Verification();
         this.controller = controller;
-        setJFrame(new JFrame("Message View"));
+        this.jFrame = new JFrame("Message View");
 
-        getJFrame().setResizable(false);
-        getJFrame().setLayout(null);
-        getJFrame().setBounds(300, 90, 600, 600);
-        getJFrame().setLocationRelativeTo(null);
+        this.jFrame.setResizable(false);
+        this.jFrame.setLayout(null);
+        this.jFrame.setBounds(300, 90, 600, 600);
+        this.jFrame.setLocationRelativeTo(null);
 
-        this.container = getJFrame().getContentPane();
+        this.container = this.jFrame.getContentPane();
         this.container.setName("accessMessagePage");
 
         this.codeNameLabel = new JLabel("Message Codename");
@@ -56,6 +48,7 @@ public class AccessMessagePage extends Page implements ActionListener {
 
         this.container.add(this.codeNameLabel);
 
+        // Creating a text field to take codename of the message
         this.messageCodeName = new JTextField();
 
         this.messageCodeName.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -64,6 +57,7 @@ public class AccessMessagePage extends Page implements ActionListener {
 
         this.container.add(messageCodeName);
 
+        // Creating password fields to take password of the message.
         this.messagePasswordLabel = new JLabel("Message Password");
         this.messagePasswordLabel.setFont(new Font("Arial", Font.BOLD, 14));
         this.messagePasswordLabel.setSize(150, 20);
@@ -96,6 +90,7 @@ public class AccessMessagePage extends Page implements ActionListener {
 
         this.container.add(userNameLabel);
 
+        // Creating text field to take username of the user.
         this.userName = new JTextField();
         this.userName.setFont(new Font("Arial", Font.PLAIN, 15));
         this.userName.setSize(200, 30);
@@ -109,7 +104,7 @@ public class AccessMessagePage extends Page implements ActionListener {
         this.userPasswordLabel.setLocation(60, 240);
 
         this.container.add(this.userPasswordLabel);
-
+        // Creating password field to take the password of the user.
         this.userPassword = new JPasswordField();
         this.userPassword.setFont(new Font("Arial", Font.PLAIN, 15));
         this.userPassword.setSize(200, 30);
@@ -117,6 +112,7 @@ public class AccessMessagePage extends Page implements ActionListener {
 
         this.container.add(this.userPassword);
 
+        // Creating checkbox and a listener to manipulate password visibility
         this.togglePasswordVisibility = new JCheckBox("Show Password");
         this.togglePasswordVisibility.setSize(170, 25);
         this.togglePasswordVisibility.setLocation(250, 300);
@@ -134,6 +130,7 @@ public class AccessMessagePage extends Page implements ActionListener {
 
         this.container.add(this.togglePasswordVisibility);
 
+        // Creating a button to view message content.
         this.viewButton = new JButton("View");
         this.viewButton.setFont(new Font("Arial", Font.PLAIN, 15));
         this.viewButton.setSize(150, 40);
@@ -142,13 +139,15 @@ public class AccessMessagePage extends Page implements ActionListener {
 
         this.container.add(this.viewButton);
 
+        // Creating a reset button to clear all input fields.
         this.resetButton = new JButton("Reset");
         this.resetButton.setFont(new Font("Arial", Font.PLAIN, 15));
         this.resetButton.setSize(150, 40);
         this.resetButton.setLocation(320, 370);
         this.resetButton.addActionListener(this);
-
         this.container.add(this.resetButton);
+
+        // Creating a button to go back to the main page.
         this.homeButton = new JButton("Home");
         this.homeButton.setFont(new Font("Arial", Font.PLAIN, 15));
         this.homeButton.setSize(150, 40);
@@ -157,26 +156,30 @@ public class AccessMessagePage extends Page implements ActionListener {
 
 
         this.container.add(homeButton);
-        getJFrame().setVisible(true);
+        this.jFrame.setVisible(true);
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.homeButton) {
-            this.getJFrame().setVisible(false);
+            // If home button is clicked,controller opens the main page.
             controller.openPage(0);
+            this.jFrame.setVisible(false);
         } else if (e.getSource() == this.viewButton) {
+            // If view button is clicked,all data is collected and sent to the controller.
             String[] data = {messageCodeName.getText(), new String(messagePassword.getPassword()), userName.getText(), new String(userPassword.getPassword())};
 
             try {
                 String message = controller.viewMessage(data);
+                // If user is authorized to view the message,controller returns the index of the message.
                 if (message.startsWith("index")) {
-                    this.getJFrame().setVisible(false);
-
+                    this.jFrame.setVisible(false);
                     String index = message.split(":")[1];
+                    // Controller opens the message content with the provided message.
                     controller.openPage(index);
                 } else {
+                    // If an error was occurred,a message dialog is showed on the screen.
                     JOptionPane.showMessageDialog(container, message, "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (IllegalBlockSizeException illegalBlockSizeException) {
@@ -190,6 +193,7 @@ public class AccessMessagePage extends Page implements ActionListener {
             }
 
         } else {
+            // If reset button was clicked,all input fields are cleared here.
             this.messagePassword.setText("");
             this.messageCodeName.setText("");
             this.userName.setText("");
