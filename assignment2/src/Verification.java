@@ -31,7 +31,7 @@ public class Verification extends InputVerifier {
         // Password length must be minimum 8
         if(passwordField.getPassword().length < 8){
             passwordValid = false;
-            errorMessage += " * Password should be at least 8 characters long.\n";
+            errorMessage += " * Password should be at least 6 characters long.\n";
         }
 
         // Preventing the creation of a user with a username that already exists in the system.
