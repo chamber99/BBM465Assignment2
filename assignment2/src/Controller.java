@@ -165,28 +165,28 @@ public class Controller
         User user = findUser(data[2]);
         // Checking if a user with the specified username exists in the system.
         if(user == null){
-            return "There is no user with this username on the system";
+            return "There is no such user with this username on the system.";
         }
         // Checking if the user has entered correct password.
         boolean passwordCheck = verifyPassword(data[3],user);
         if(!passwordCheck){
-            return "Password is not correct!";
+            return "User password is not correct!";
         }
         // Checking if a message with the entered messageID exists in the system.
         Message message = findMessage(data[0]);
         if(message == null){
-            return "There is no message with this message ID on the system";
+            return "There is no message with this message ID on the system.";
         }
         // Checking if user is authorized to view this message.
         foundMessage[0] = message;
         boolean receiverCheck = verifyMessageReceiver(message,user);
         if(!receiverCheck){
-            return "You are not authorized to view this message";
+            return "You are not authorized to view this message.";
         }
         // Checking if user has entered the correct password for the message.
         boolean messagePasswordCheck = checkMessagePassword(message,data[1]);
         if(!messagePasswordCheck){
-            return "Message password is not correct";
+            return "Message password is not correct!";
         }
         // If all checking process is done and program reaches this line,index of the found message is returned here.
         return "index:";
