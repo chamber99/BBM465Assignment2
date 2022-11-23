@@ -1,26 +1,8 @@
 import javax.swing.*;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 
-public class Verification extends InputVerifier {
-    @Override
-    public boolean verify(JComponent input) {
-        if(input.getClass().equals(JPasswordField.class)){
-            if(((JPasswordField) input).getPassword().length < 8){
-                JOptionPane.showMessageDialog(input.getParent(),"Password length should be at least 8 chars.","Error",JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            return true;
-        } else if (input.getClass().equals(JTextField.class)) {
-
-            return true;
-        }else if(input.getClass().equals(JTextArea.class)){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
+public class Verification {
     public boolean verifyUserRegister(JPasswordField passwordField, JTextField username, String[] usernames){
         boolean passwordValid = true;
         boolean usernameValid = true;
@@ -28,8 +10,8 @@ public class Verification extends InputVerifier {
         String errorMessage = "";
         String success = "The user "+username.getText()+" has been created successfully!";
 
-        // Password length must be minimum 8
-        if(passwordField.getPassword().length < 8){
+        // Password length must be minimum 6
+        if(passwordField.getPassword().length < 6){
             passwordValid = false;
             errorMessage += " * Password should be at least 6 characters long.\n";
         }
@@ -47,7 +29,6 @@ public class Verification extends InputVerifier {
         else{
             JOptionPane.showMessageDialog(passwordField.getParent(),success,"Success",JOptionPane.INFORMATION_MESSAGE);
         }
-
         return passwordValid && usernameValid;
     }
 

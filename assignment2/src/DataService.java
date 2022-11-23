@@ -111,7 +111,7 @@ public class DataService
     public ArrayList<User> fetchAllUsers() throws IOException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
     {
         // This methods fetches all users from the database and stores them in an arraylist.
-        ArrayList<User> allUsers = new ArrayList<User>();
+        ArrayList<User> allUsers = new ArrayList<>();
         FileInputStream inputStream = new FileInputStream("user.data");
         int length = inputStream.available();
         if(length != 0){
