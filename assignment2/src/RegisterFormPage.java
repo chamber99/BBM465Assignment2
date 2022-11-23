@@ -110,10 +110,16 @@ public class RegisterFormPage implements ActionListener
         this.messageEntryTextField.setFont(new Font("Arial", Font.PLAIN, 15));
         this.messageEntryTextField.setBounds(250,220,300,200);
         this.messageEntryTextField.setBorder(BorderFactory.createLineBorder(Color.black,1));
+
+        this.messageEntryTextField.setWrapStyleWord(true);
+        this.messageEntryTextField.setLineWrap(true);
+        this.messageEntryTextField.setCaretPosition(0);
+
+
         this.container.add(messageEntryTextField);
         // Making message area scrollable for large messages.
         JScrollPane scroll = new JScrollPane(messageEntryTextField,
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setSize(300, 200);
         scroll.setLocation(250, 220);
         this.jFrame.add(scroll);

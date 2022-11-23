@@ -30,12 +30,15 @@ public class ViewMessagePage implements ActionListener {
         this.messageArea.setSize(400, 350);
         this.messageArea.setLocation(100, 50);
         this.messageArea.setEditable(false);
+        this.messageArea.setWrapStyleWord(true);
+        this.messageArea.setLineWrap(true);
+        this.messageArea.setCaretPosition(0);
 
         // Setting the message content by using the input message.
         this.messageArea.setText(message.getContent());
         this.messageArea.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 
-        this.container.add(this.messageArea);
+        //this.container.add(this.messageArea);
 
         // Creating a button to go back to the main page.
         this.returnButton = new JButton("Return");
@@ -48,10 +51,19 @@ public class ViewMessagePage implements ActionListener {
 
         this.container.add(this.returnButton);
         // Making message area scrollable to be able to show long messages both vertically and horizontally.
+
         JScrollPane scroll = new JScrollPane(messageArea,
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setSize(400, 350);
         scroll.setLocation(100, 50);
+
+        JScrollBar scrollbar = scroll.getVerticalScrollBar();
+        int min = scrollbar.getMinimum();
+        scrollbar.setValue(min);
+
+        this.messageArea.requestFocus();
+        this.messageArea.setCaretPosition(0);
+
 
         this.jFrame.add(scroll);
 
