@@ -80,30 +80,4 @@ public class Verification extends InputVerifier {
 
         return passwordValid && codenameValid;
     }
-
-    /*public boolean verifyUserAccess(boolean[] user, boolean[] message){
-        String error = "";
-        boolean userFound = user[0];
-        boolean passwordValid = user[1];
-
-        boolean messageFound = message[0];
-        boolean messagePass = message[1];
-
-        if(!userFound){
-            error += " * There is no user with that username on the system! \n";
-        }
-        if(!passwordValid){
-            error += " * The password for the user is wrong! \n";
-        }
-        if(!messageFound){
-            error += " * No message was found with that codename. \n";
-        }
-        if(!messagePass){
-            error += " * Wrong password for the message. \n";
-        }
-
-
-        return userFound && passwordValid && messageFound && messagePass;
-    }*/
-
 }
